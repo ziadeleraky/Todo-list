@@ -1,8 +1,13 @@
 const express = require("express");
 const app = express();
 
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static("public"));
+
 // setting the view engine to ejs
 app.set("view engine", "ejs");
+
+const items = [];
 
 app.get("/", (req, res) => {
   const today = new Date();
@@ -35,7 +40,12 @@ app.get("/", (req, res) => {
       console.log("Error: current day is equal to: " + currentDay);
   }
 
-  res.render("list", { day });
+  res.render("list", { day, items });
+});
+
+app.post("/", (req, res) => {
+  items.push(req.body.item);
+  res.redirect("/");
 });
 
 // setting the port to 3000
